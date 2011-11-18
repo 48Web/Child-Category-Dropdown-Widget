@@ -33,23 +33,21 @@ class CategoryDropdownWidget extends WP_Widget {
 			// check if category has child
 			if (get_category_children($cat->term_id) != "") {
 				echo '<span class="parent-category-title">' .$cat->name .'</span><br />';
-				wp_dropdown_categories(array('child_of' => $cat->term_id, 'show_option_none' => 'Select ' .$cat->name, 'hide_if_empty' => 1));
+				wp_dropdown_categories(array('id' => $cat->term_id, 'class' => 'child-cat-select', 'child_of' => $cat->term_id, 'show_option_none' => 'Select ' .$cat->name, 'hide_if_empty' => 1));
 				echo '<br />';
 			}
 		}
 		
       	echo $after_widget;
-
+		wp_enqueue_script('jquery');
 		?>
 		<script type="text/javascript"><!--
-		    var dropdown = document.getElementById("cat");
-		    function onCatChange() {
-				if ( dropdown.options[dropdown.selectedIndex].value > 0 ) {
+			jQuery(".child-cat-select").change(function() { 
+				if (jQuery(this).val() > 0) {
 					location.href = "<?php echo get_option('home');
-		?>/?cat="+dropdown.options[dropdown.selectedIndex].value;
+		?>/?cat=" + jQuery(this).val();
 				}
-		    }
-		    dropdown.onchange = onCatChange;
+			});
 		--></script>
      <?php
   }
